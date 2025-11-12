@@ -44,7 +44,21 @@ def read_fasta(filename):
 
     try:
         # TODO: Open and parse the file
-        pass
+        with open(filename, 'r') as fasta_file:
+            curr_header = ""
+            curr_seq = []
+            for line in fasta_file:
+                line = line.strip()
+                if line.startswith('>'):
+                    if curr_header:
+                        sequences[curr_header] = "".join(curr_seq)
+                    curr_header = line[1:].strip('>')
+                    curr_seq = []
+                else:
+                    curr_seq.append(line)
+            if curr_header:
+                sequences[curr_header] = "".join(curr_seq)
+        return sequences
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found!")
         return {}
@@ -64,6 +78,10 @@ def print_fasta_stats(sequences):
     # Print:
     # - Total number of sequences
     # - For each sequence: header, length, first 50 amino acids
+    print(len(sequences))
+    for header in sequences:
+        print(header)
+        print(sequences[header][:50])
     pass
 
 
